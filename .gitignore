@@ -1,0 +1,12 @@
+# data
+# out
+*out/
+*out/*
+# logs
+*.log
+
+
+# python sys files
+*.pyc
+*.pyo
+__pycache__/
