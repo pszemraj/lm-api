@@ -214,14 +214,15 @@ if __name__ == "__main__":
 
     # query the API
     query_terms(
-        terms,
-        prefix,
-        suffix,
+        term_list=terms,
+        prefix=prefix,
+        suffix=suffix,
         verbose=verbose,
         model_id=model_id,
         n_tokens=n_tokens,
         frequency_penalty=frequency_penalty,
         presence_penalty=presence_penalty,
+        out_path=output_dir,
     )
 
     print(f"done")
