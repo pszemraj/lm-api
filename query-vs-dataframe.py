@@ -5,12 +5,13 @@
 """
 
 
+from pathlib import Path
 import openai
 import os
 
-env_var = os.environ.get("GOOSE")
-openai.api_key = env_var
-openai.api_base = "https://api.goose.ai/v1"
+from torch import true_divide
+
+
 import argparse
 
 from tqdm import tqdm
@@ -39,8 +40,9 @@ def query_terms(
     verbose=False,
     model_id="gpt-neo-20b",
     n_tokens=128,
-    frequency_penalty=1.0,
-    presence_penalty=0.0,
+    frequency_penalty=0.3,
+    presence_penalty=0.05,
+    temperature=1,
     out_path=None,
 ):
     """
@@ -63,9 +65,14 @@ def query_terms(
             max_tokens=_query_token_count + n_tokens,
             frequency_penalty=frequency_penalty,
             presence_penalty=presence_penalty,
+            temperature=temperature,
         )
         # append the response to the output text file
-        append_entry_outtxt(_query, completion.choices[0].text, out_path=out_path,
+        append_entry_outtxt(
+            _query,
+            completion.choices[0].text,
+            out_path=out_path,
+            model_name=model_id,
                             verbose=verbose)
 
 
@@ -78,8 +85,7 @@ def get_parser():
     parser.add_argument(
         "-i",
         "--input-file",
-        required=False,
-        default="causality_terms",
+        required=True,
         type=str,
         help="name of the input file or link to the input file",
     )
@@ -92,10 +98,18 @@ def get_parser():
         help="path to directory to write output files (new folder created). Defaults to input-dir",
     )
     parser.add_argument(
+        '-p',
+        '--provider-id',
+        required=False,
+        type=str,
+        default="goose",
+        help="provider to connect to for API. Defaults to goose (openai is other)",
+    )
+    parser.add_argument(
         "-p",
         "--prefix",
         required=False,
-        default="The explanation I heard during class of",
+        default="Explain the following Natural Language Processing (NLP) concept(s):",
         type=str,
         help="prefix to add to each query",
     )
@@ -103,7 +117,7 @@ def get_parser():
         "-s",
         "--suffix",
         required=False,
-        default="in causal inference was possibly the best I had ever heard. it included the steps to implement it and useful details such as:",
+        default=" An acceptable solution to the problem would be similar to:",
         type=str,
         help="suffix to add to each query",
     )
@@ -111,7 +125,7 @@ def get_parser():
         "-m",
         "--model-id",
         required=False,
-        default="gpt-neo-20b",
+        default="gpt-neo-20b", # gpt-j-6b
         type=str,
         help="model id to use for the API query",
     )
@@ -124,18 +138,26 @@ def get_parser():
         help="number of tokens to use for the API query",
     )
     parser.add_argument(
-        "-f",
+        "-t",
+        "--temperature",
+        required=False,
+        default=0.7,
+        type=float,
+        help="temperature to use for the API query",
+    )
+    parser.add_argument(
+        "-f2",
         "--frequency-penalty",
         required=False,
-        default=1.0,
+        default=0.15,
         type=float,
         help="frequency penalty to use for the API query",
     )
     parser.add_argument(
-        "-pp",
+        "-p2",
         "--presence-penalty",
         required=False,
-        default=0.0,
+        default=0.05,
         type=float,
         help="presence penalty to use for the API query",
     )
@@ -151,9 +173,11 @@ def get_parser():
 
 
 if __name__ == "__main__":
+
+    PROVIDERS = ["goose", "openai"]
     parser = get_parser()
     args = parser.parse_args()
-    input_id = args.input_file
+    input_id = Path(args.input_file)
     output_dir = args.output_dir or os.getcwd()
     output_dir = join(output_dir, "out")
     os.makedirs(output_dir, exist_ok=True)
@@ -161,11 +185,18 @@ if __name__ == "__main__":
     prefix = args.prefix
     suffix = args.suffix
     model_id = args.model_id
+    provider_id = args.provider_id
+    assert provider_id in PROVIDERS, f"provider_id must be one of {PROVIDERS}"
+    if provider_id == "openai":
+        model_id = "text-davinci-002"
     n_tokens = args.n_tokens
     frequency_penalty = args.frequency_penalty
     presence_penalty = args.presence_penalty
     verbose = args.verbose
 
+    env_var = os.environ.get(provider_id.upper())
+    openai.api_key = env_var
+    openai.api_base = "https://api.goose.ai/v1"
     # load the dataframe
     df = (
         flex_load_pandas(src_links[input_id])
