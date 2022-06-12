@@ -29,7 +29,7 @@ def get_timestamp(verbose=False):
 
 
 def append_entry_outtxt(
-    prompt, response, out_path=None, file_extension="md", verbose=False
+    prompt, response, out_path=None, file_extension="md", model_name:str="", verbose=False
 ):
     """
     append_entry_outtxt - append a string to the output text file
@@ -43,7 +43,7 @@ def append_entry_outtxt(
     """
     if out_path is None:
         cwd = Path.cwd()
-        out_path = cwd / "out" / f"api_queries_{get_timestamp()}.{file_extension}"
+        out_path = cwd / "out" / f"api_queries_{model_name}_{get_timestamp()}.{file_extension}"
     with open(out_path, "a", encoding="utf-8", errors="ignore") as f:
         f.write(f" ## {prompt}\n")
         f.write(f"Response: \n{response}\n")
