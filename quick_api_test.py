@@ -21,7 +21,7 @@ if __name__ == "__main__":
     # Create a completion, return results streaming as they are generated. Run with `python3 -u` to ensure unbuffered output.
     st = time.perf_counter()
     completion = openai.Completion.create(
-            engine="gpt-neo-20b",
+            engine="gpt-j-6b",
             prompt="I was smiling to myself, thinking about the next time I would be able to visit the inner city bus stop and",
             max_tokens=160,
             )
