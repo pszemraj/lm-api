@@ -70,7 +70,8 @@ def query_terms(
             completion.choices[0].text,
             out_path=out_path,
             model_name=model_id,
-                            verbose=verbose)
+            verbose=verbose,
+        )
 
 
 def get_parser():
@@ -95,8 +96,8 @@ def get_parser():
         help="path to directory to write output files (new folder created). Defaults to input-dir",
     )
     parser.add_argument(
-        '-provider',
-        '--provider-id',
+        "-provider",
+        "--provider-id",
         required=False,
         type=str,
         default="goose",
@@ -129,7 +130,7 @@ def get_parser():
         "-m",
         "--model-id",
         required=False,
-        default="gpt-neo-20b", # gpt-j-6b
+        default="gpt-neo-20b",  # gpt-j-6b
         type=str,
         help="model id to use for the API query",
     )
@@ -201,7 +202,11 @@ if __name__ == "__main__":
 
     env_var = os.environ.get(provider_id.upper())
     openai.api_key = env_var if key is None else str(key)
-    openai.api_base = "https://api.goose.ai/v1" if provider_id == "goose" else "https://api.openai.com/v1"
+    openai.api_base = (
+        "https://api.goose.ai/v1"
+        if provider_id == "goose"
+        else "https://api.openai.com/v1"
+    )
     # load the dataframe
     df = (
         flex_load_pandas(src_links[input_id])
