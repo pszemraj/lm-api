@@ -5,21 +5,18 @@
 """
 
 
-from pathlib import Path
-import openai
-import os
-
-from torch import true_divide
-
-
 import argparse
-
-from tqdm import tqdm
-import time
-import random
 import logging
+import os
+import random
+import time
 from os.path import join
-from utils import get_timestamp, append_entry_outtxt, df_to_list, flex_load_pandas
+from pathlib import Path
+
+import openai
+from tqdm import tqdm
+
+from utils import append_entry_outtxt, df_to_list, flex_load_pandas
 
 logging.basicConfig(
     level=logging.INFO,
@@ -98,7 +95,7 @@ def get_parser():
         help="path to directory to write output files (new folder created). Defaults to input-dir",
     )
     parser.add_argument(
-        '-p',
+        '-provider',
         '--provider-id',
         required=False,
         type=str,
