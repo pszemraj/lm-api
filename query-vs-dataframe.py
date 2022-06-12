@@ -24,7 +24,7 @@ from utils import get_timestamp, append_entry_outtxt, df_to_list, flex_load_pand
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s %(message)s",
-    filename=f"api_log_{get_timestamp()}.log",
+    filename=f"api_dataframe_query.log",
 )
 logger = logging.getLogger(__name__)
 
