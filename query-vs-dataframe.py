@@ -103,6 +103,13 @@ def get_parser():
         help="provider to connect to for API. Defaults to goose (openai is other)",
     )
     parser.add_argument(
+        "-k",
+        "--key",
+        type=str,
+        default=None,
+        help="API key for the provider if needed",
+    )
+    parser.add_argument(
         "-p",
         "--prefix",
         required=False,
@@ -182,6 +189,7 @@ if __name__ == "__main__":
     prefix = args.prefix
     suffix = args.suffix
     model_id = args.model_id
+    key = args.key
     provider_id = args.provider_id
     assert provider_id in PROVIDERS, f"provider_id must be one of {PROVIDERS}"
     if provider_id == "openai":
@@ -192,8 +200,8 @@ if __name__ == "__main__":
     verbose = args.verbose
 
     env_var = os.environ.get(provider_id.upper())
-    openai.api_key = env_var
-    openai.api_base = "https://api.goose.ai/v1"
+    openai.api_key = env_var if key is None else str(key)
+    openai.api_base = "https://api.goose.ai/v1" if provider_id == "goose" else "https://api.openai.com/v1"
     # load the dataframe
     df = (
         flex_load_pandas(src_links[input_id])
