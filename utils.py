@@ -136,4 +136,4 @@ def flex_load_pandas(path_or_url, verbose=False):
     if verbose:
         print("loaded pandas dataframe: \n", df)
         print(df.info())
-    return df
+    return df.convert_dtypes()
