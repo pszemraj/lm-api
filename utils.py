@@ -51,6 +51,8 @@ def append_entry_outtxt(
         out_path = (
             cwd / "out" / f"api_queries_{model_name}_{get_timestamp()}.{file_extension}"
         )
+    else:
+        out_path = Path(out_path) / f"api_queries_{model_name}_{get_timestamp()}.{file_extension}"
     with open(out_path, "a", encoding="utf-8", errors="ignore") as f:
         f.write(f" ## {prompt}\n")
         f.write(f"Response: \n{response}\n")
