@@ -128,12 +128,12 @@ def get_parser():
         help="suffix to add to each query",
     )
     parser.add_argument(
-        '-kc',
-        '--key-column',
+        "-kc",
+        "--key-column",
         required=False,
-        default='terms',
+        default="terms",
         type=str,
-        help='name of the column in the input file that contains the terms to query',
+        help="name of the column in the input file that contains the terms to query",
     )
     parser.add_argument(
         "-m",
@@ -223,7 +223,9 @@ if __name__ == "__main__":
         if input_id in src_links.keys()
         else flex_load_pandas(input_id)
     )
-    assert key_column in df.columns, f"key_column (-kc switch) must be in the dataframe columns"
+    assert (
+        key_column in df.columns
+    ), f"key_column (-kc switch) must be in the dataframe columns"
     # get the list of terms
     terms = df_to_list(df, key_column, verbose=False)
 
