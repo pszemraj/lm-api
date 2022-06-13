@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-import time
-import openai
 import os
 import pprint as pp
+import time
+
+import openai
 
 env_var = os.environ.get("GOOSE")
 openai.api_key = env_var

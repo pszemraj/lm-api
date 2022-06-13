@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-    query-vs-dataframe.py - loads a CSV file and queries it using Pandas, then each row is a query to API
+    query-vs-dataframe.py - loads a CSV/xlsx/JSON file using Pandas, then sends an API query for each row in <key_column> in the file. Outputs the query and response to a text file.
+
+    python query-vs-dataframe.py -h for help
 """
 
 
