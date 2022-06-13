@@ -3,11 +3,11 @@
 """
 
 
-from pathlib import Path
+import datetime
 import re
+from pathlib import Path
 
 import pandas as pd
-import datetime
 
 
 def get_timestamp(verbose=False):
@@ -87,6 +87,26 @@ def df_to_list(df, column, verbose=False):
         print(f"converted {column} to list: \n{df_list}")
     return df_list
 
+def check_if_link(text:str, verbose=False):
+    """
+    check_if_link - check if a string is a link
+
+    Args:
+        text (str): the string to check
+        verbose (bool, optional): . Defaults to False.
+
+    Returns:
+        bool: whether or not the string is a link
+    """
+
+    if re.findall(r"^https?://", text):
+        if verbose:
+            print(f"{text} is a link")
+        return True
+    else:
+        if verbose:
+            print(f"{text} is not a link")
+        return False
 
 def flex_load_pandas(path_or_url, verbose=False):
     """
