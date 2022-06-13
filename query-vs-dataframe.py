@@ -20,6 +20,7 @@ from utils import append_entry_outtxt, df_to_list, flex_load_pandas
 
 logging.basicConfig(
     level=logging.INFO,
+    mode="w",
     format="%(asctime)s %(message)s",
     filename=f"api_dataframe_query.log",
 )
@@ -127,6 +128,14 @@ def get_parser():
         help="suffix to add to each query",
     )
     parser.add_argument(
+        '-kc',
+        '--key-column',
+        required=False,
+        default='terms',
+        type=str,
+        help='name of the column in the input file that contains the terms to query',
+    )
+    parser.add_argument(
         "-m",
         "--model-id",
         required=False,
@@ -187,6 +196,7 @@ if __name__ == "__main__":
     output_dir = join(output_dir, "out")
     os.makedirs(output_dir, exist_ok=True)
 
+    key_column = args.key_column
     prefix = args.prefix
     suffix = args.suffix
     model_id = args.model_id
@@ -213,9 +223,9 @@ if __name__ == "__main__":
         if input_id in src_links.keys()
         else flex_load_pandas(input_id)
     )
-
+    assert key_column in df.columns, f"key_column (-kc switch) must be in the dataframe columns"
     # get the list of terms
-    terms = df_to_list(df, "terms", verbose=False)
+    terms = df_to_list(df, key_column, verbose=False)
 
     # query the API
     query_terms(
