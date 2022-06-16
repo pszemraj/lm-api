@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+"""
+    quick_api_test.py - Quick API Test using GOOSE API. Use this to check if it works.
+"""
 import os
 import pprint as pp
 import time
@@ -10,7 +13,6 @@ env_var = os.environ.get("GOOSE")
 openai.api_key = env_var
 openai.api_base = "https://api.goose.ai/v1"
 
-# 'gpt-neo-20b'
 if __name__ == "__main__":
     # List Engines (Models)
     engines = openai.Engine.list()
@@ -24,11 +26,10 @@ if __name__ == "__main__":
     completion = openai.Completion.create(
         engine="gpt-j-6b",
         prompt="I was smiling to myself, thinking about the next time I would be able to visit the inner city bus stop and",
-        max_tokens=160,
+        max_tokens=64,
     )
     rt = time.perf_counter() - st
     # Print the first result
-
     maybe_a_bus = completion.choices[0].text
     print(f"response has type {type(maybe_a_bus)} and is:\n{maybe_a_bus}")
     print(f"response took {rt} seconds")
