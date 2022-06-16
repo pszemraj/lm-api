@@ -28,6 +28,7 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
+
 def query_terms(
     term_list,
     prefix,
@@ -201,7 +202,11 @@ if __name__ == "__main__":
     PROVIDERS = ["goose", "openai"]
     parser = get_parser()
     args = parser.parse_args()
-    input_id = Path(args.input_file) if args.input_file else Path.cwd() / 'data' / 'test_queries.xlsx'
+    input_id = (
+        Path(args.input_file)
+        if args.input_file
+        else Path.cwd() / "data" / "test_queries.xlsx"
+    )
     output_dir = args.output_dir or Path.cwd() / "out"
     output_dir.mkdir(exist_ok=True)
 
