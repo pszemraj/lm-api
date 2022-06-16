@@ -46,7 +46,19 @@ def query_terms(
     out_path=None,
 ):
     """
-    query_terms - query the API for each term in the list
+    query_terms - queries the API for each term in the term_list
+
+    Args:
+        term_list (list): list of terms to query
+        prefix (str): prefix to add to each query
+        suffix (str): suffix to add to each query
+        verbose (bool, optional): _description_. Defaults to False.
+        model_id (str, optional): _description_. Defaults to "gpt-neo-20b".
+        n_tokens (int, optional): _description_. Defaults to 128.
+        frequency_penalty (float, optional): _description_. Defaults to 0.3.
+        presence_penalty (float, optional): _description_. Defaults to 0.05.
+        temperature (int, optional): _description_. Defaults to 1.
+        out_path (_type_, optional): _description_. Defaults to None.
     """
     if verbose:
         print(f"querying {len(term_list)} terms")

@@ -37,14 +37,15 @@ def append_entry_outtxt(
     verbose=False,
 ):
     """
-    append_entry_outtxt - append a string to the output text file
+    append_entry_outtxt - append an entry to the outtxt file
 
-    Parameters
-    ----------
-    out_txt : str
-        the path to the output text file
-    entry : str
-        the string to append
+    Args:
+        prompt, string: the prompt to append
+        response, string: the response to append
+        out_path, string: the path to the outtxt file. If None, uses the default path.
+        file_extension, string: the file extension of the outtxt file.
+        model_name, (str, optional): the name of the model. Defaults to "".
+        verbose, (bool, optional): Defaults to False.
     """
     if out_path is None:
         cwd = Path.cwd()
@@ -87,7 +88,8 @@ def df_to_list(df, column, verbose=False):
         print(f"converted {column} to list: \n{df_list}")
     return df_list
 
-def check_if_link(text:str, verbose=False):
+
+def check_if_link(text: str, verbose=False):
     """
     check_if_link - check if a string is a link
 
@@ -107,6 +109,7 @@ def check_if_link(text:str, verbose=False):
         if verbose:
             print(f"{text} is not a link")
         return False
+
 
 def flex_load_pandas(path_or_url, verbose=False):
     """
