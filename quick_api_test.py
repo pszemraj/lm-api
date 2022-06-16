@@ -25,7 +25,7 @@ if __name__ == "__main__":
     st = time.perf_counter()
     completion = openai.Completion.create(
         engine="gpt-j-6b",
-        prompt="I was smiling to myself, thinking about the next time I would be able to visit the inner city bus stop and",
+        prompt="Having smelt stroopwafels in the wind, I smiled to myself and grinned",
         max_tokens=64,
     )
     rt = time.perf_counter() - st
