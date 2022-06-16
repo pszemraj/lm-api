@@ -22,16 +22,11 @@ from utils import append_entry_outtxt, df_to_list, flex_load_pandas
 
 logging.basicConfig(
     level=logging.INFO,
-    mode="w",
+    filemode="w",
     format="%(asctime)s %(message)s",
     filename=f"api_dataframe_query.log",
 )
 logger = logging.getLogger(__name__)
-
-src_links = {
-    "causality_terms": "https://www.dropbox.com/s/gbc0ne8rukkoj7z/summaries-setA.xlsx?dl=1",
-}
-
 
 def query_terms(
     term_list,
@@ -98,7 +93,8 @@ def get_parser():
     parser.add_argument(
         "-i",
         "--input-file",
-        required=True,
+        required=False,
+        default=None,
         type=str,
         help="name of the input file or link to the input file",
     )
@@ -205,10 +201,9 @@ if __name__ == "__main__":
     PROVIDERS = ["goose", "openai"]
     parser = get_parser()
     args = parser.parse_args()
-    input_id = Path(args.input_file)
-    output_dir = args.output_dir or os.getcwd()
-    output_dir = join(output_dir, "out")
-    os.makedirs(output_dir, exist_ok=True)
+    input_id = Path(args.input_file) if args.input_file else Path.cwd() / 'data' / 'test_queries.xlsx'
+    output_dir = args.output_dir or Path.cwd() / "out"
+    output_dir.mkdir(exist_ok=True)
 
     key_column = args.key_column
     prefix = args.prefix
@@ -237,11 +232,7 @@ if __name__ == "__main__":
         )
         model_id = "text-davinci-002"
     # load the dataframe
-    df = (
-        flex_load_pandas(src_links[input_id])
-        if input_id in src_links.keys()
-        else flex_load_pandas(input_id)
-    )
+    df = flex_load_pandas(input_id)
     assert (
         key_column in df.columns
     ), f"key_column (-kc switch) must be in the dataframe columns"
