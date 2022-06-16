@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-    quick_api_test.py - Quick API Test using GOOSE API. Use this to check if it works.
+    test_goose_api.py - Quick API Test using GOOSE API. Use this to check if it works.
 """
 import os
 import pprint as pp
