@@ -217,8 +217,7 @@ if __name__ == "__main__":
     key = args.key
     provider_id = args.provider_id
     assert provider_id in PROVIDERS, f"provider_id must be one of {PROVIDERS}"
-    if provider_id == "openai":
-        model_id = "text-davinci-002"
+
     n_tokens = args.n_tokens
     frequency_penalty = args.frequency_penalty
     presence_penalty = args.presence_penalty
@@ -231,6 +230,12 @@ if __name__ == "__main__":
         if provider_id == "goose"
         else "https://api.openai.com/v1"
     )
+    engines = openai.Engine.list()
+    if provider_id == "openai" and model_id not in engines:
+        logging.warning(
+            f"model {model_id} not found in openai.Engine.list(), using text-davinci-002"
+        )
+        model_id = "text-davinci-002"
     # load the dataframe
     df = (
         flex_load_pandas(src_links[input_id])
