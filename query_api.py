@@ -80,7 +80,7 @@ def query_terms(
         _query = _query.replace(prefix, "").replace(suffix, "")
 
         # append the response to the output text file
-        append_entry_outtxt(
+        out_file_path = append_entry_outtxt(
             _query,
             completion.choices[0].text,
             out_path=out_path,
@@ -88,6 +88,7 @@ def query_terms(
             source_path=source_path,
             verbose=verbose,
         )
+    return out_file_path
 
 
 def get_parser():
@@ -256,7 +257,7 @@ if __name__ == "__main__":
         terms = df_to_list(df, key_column, verbose=False)
 
     # query the API
-    query_terms(
+    out_file_path = query_terms(
         term_list=terms,
         prefix=prefix,
         suffix=suffix,
@@ -269,4 +270,4 @@ if __name__ == "__main__":
         source_path=input_id,
     )
 
-    print(f"done")
+    print(f"done, output file:\n\t{out_file_path}")

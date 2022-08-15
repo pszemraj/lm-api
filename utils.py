@@ -74,6 +74,8 @@ def append_entry_outtxt(
     if verbose:
         print(f"wrote to {out_path}")
 
+    return out_path
+
 
 def df_to_list(df, column, verbose=False):
     """
