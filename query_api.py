@@ -236,13 +236,19 @@ if __name__ == "__main__":
             f"model {model_id} not found in openai.Engine.list(), using text-davinci-002"
         )
         model_id = "text-davinci-002"
-    # load the dataframe
-    df = flex_load_pandas(input_id)
-    assert (
-        key_column in df.columns
-    ), f"key_column (-kc switch) must be in the dataframe columns"
-    # get the list of terms
-    terms = df_to_list(df, key_column, verbose=False)
+
+    if input_id.suffix == ".txt":
+        with open(input_id, "r", encoding='utf-8', errors='ignore') as f:
+            terms = f.readlines()
+    else:
+        # assume dataframe
+        # load the dataframe
+        df = flex_load_pandas(input_id)
+        assert (
+            key_column in df.columns
+        ), f"key_column (-kc switch) must be in the dataframe columns"
+        # get the list of terms
+        terms = df_to_list(df, key_column, verbose=False)
 
     # query the API
     query_terms(
