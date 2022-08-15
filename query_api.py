@@ -12,7 +12,6 @@ import logging
 import os
 import random
 import time
-from os.path import join
 from pathlib import Path
 
 import openai
@@ -40,6 +39,7 @@ def query_terms(
     presence_penalty=0.05,
     temperature=1,
     out_path=None,
+    source_path=None,
 ):
     """
     query_terms - queries the API for each term in the term_list
@@ -75,12 +75,17 @@ def query_terms(
             presence_penalty=presence_penalty,
             temperature=temperature,
         )
+
+        # remove the prefix and suffix from the query
+        _query = _query.replace(prefix, "").replace(suffix, "")
+
         # append the response to the output text file
         append_entry_outtxt(
             _query,
             completion.choices[0].text,
             out_path=out_path,
             model_name=model_id,
+            source_path=source_path,
             verbose=verbose,
         )
 
@@ -261,6 +266,7 @@ if __name__ == "__main__":
         frequency_penalty=frequency_penalty,
         presence_penalty=presence_penalty,
         out_path=output_dir,
+        source_path=input_id,
     )
 
     print(f"done")

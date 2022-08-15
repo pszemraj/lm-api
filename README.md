@@ -7,7 +7,7 @@ Some simple utilities for querying the large language model API. Currently known
 Command line script:
 
 ```
-python query_vs_dataframe.py -i <input_file> -m 'gpt-j-6b' -o <output_dir>
+python query_api.py -i <input_file> -m 'gpt-j-6b' -o <output_dir>
 ```
 
 This will query each row in the input file and output the results to the output directory using the gpt-j-6b model (on Goose API).
