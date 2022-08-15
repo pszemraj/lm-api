@@ -51,9 +51,11 @@ def append_entry_outtxt(
     source_path = Path(source_path) if source_path else Path(__file__)
     if out_path is None:
         cwd = Path.cwd()
-        out_path =             cwd / "out"
+        out_path = cwd / "out"
         out_path.mkdir(exist_ok=True)
-        out_path = out_path / f"apiQ__{source_path.stem}_{get_timestamp()}.{file_extension}"
+        out_path = (
+            out_path / f"apiQ__{source_path.stem}_{get_timestamp()}.{file_extension}"
+        )
     else:
         out_path = (
             Path(out_path)
