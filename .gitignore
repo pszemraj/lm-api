@@ -5,6 +5,10 @@
 # logs
 *.log
 
+# archive files
+*.tar.gz
+*.zip
+*.7z
 
 # python sys files
 *.pyc
