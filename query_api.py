@@ -238,7 +238,7 @@ if __name__ == "__main__":
         model_id = "text-davinci-002"
 
     if input_id.suffix == ".txt":
-        with open(input_id, "r", encoding='utf-8', errors='ignore') as f:
+        with open(input_id, "r", encoding="utf-8", errors="ignore") as f:
             terms = f.readlines()
     else:
         # assume dataframe
