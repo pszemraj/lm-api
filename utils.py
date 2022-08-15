@@ -34,6 +34,7 @@ def append_entry_outtxt(
     out_path=None,
     file_extension="md",
     model_name: str = "",
+    source_path=None,
     verbose=False,
 ):
     """
@@ -47,22 +48,33 @@ def append_entry_outtxt(
         model_name, (str, optional): the name of the model. Defaults to "".
         verbose, (bool, optional): Defaults to False.
     """
+    source_path = Path(source_path) if source_path else Path(__file__)
     if out_path is None:
         cwd = Path.cwd()
+        out_path = cwd / "out"
+        out_path.mkdir(exist_ok=True)
         out_path = (
-            cwd / "out" / f"api_queries_{model_name}_{get_timestamp()}.{file_extension}"
+            out_path / f"apiQ__{source_path.stem}_{get_timestamp()}.{file_extension}"
         )
     else:
         out_path = (
             Path(out_path)
-            / f"api_queries_{model_name}_{get_timestamp()}.{file_extension}"
+            / f"api_queries_{source_path.stem}_{get_timestamp()}.{file_extension}"
         )
+
+    if not out_path.exists():
+        with open(out_path, "w", encoding="utf-8", errors="ignore") as f:
+            f.write(f"API QUERIES FOR {source_path.stem}\n\n")
+            f.write(f"- {model_name}\n")
+            f.write(f"- {get_timestamp()}\n")
     with open(out_path, "a", encoding="utf-8", errors="ignore") as f:
         f.write(f" ## {prompt}\n")
         f.write(f"Response: \n{response}\n")
         f.write("\n")
     if verbose:
         print(f"wrote to {out_path}")
+
+    return out_path
 
 
 def df_to_list(df, column, verbose=False):
