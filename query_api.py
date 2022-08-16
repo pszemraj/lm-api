@@ -213,7 +213,7 @@ if __name__ == "__main__":
         if args.input_file
         else Path.cwd() / "data" / "test_queries.xlsx"
     )
-    output_dir = args.output_dir or Path.cwd() / "out"
+    output_dir = Path(args.output_dir) or Path.cwd() / "out"
     output_dir.mkdir(exist_ok=True)
 
     key_column = args.key_column
