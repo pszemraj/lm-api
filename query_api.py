@@ -10,6 +10,7 @@
 import argparse
 import logging
 import os
+import sys
 import random
 import time
 from pathlib import Path
@@ -213,7 +214,7 @@ if __name__ == "__main__":
         if args.input_file
         else Path.cwd() / "data" / "test_queries.xlsx"
     )
-    output_dir = args.output_dir or Path.cwd() / "out"
+    output_dir = Path(args.output_dir) or Path.cwd() / "out"
     output_dir.mkdir(exist_ok=True)
 
     key_column = args.key_column
@@ -237,11 +238,35 @@ if __name__ == "__main__":
         else "https://api.openai.com/v1"
     )
     engines = openai.Engine.list()
-    if provider_id == "openai" and model_id not in engines:
-        logging.warning(
-            f"model {model_id} not found in openai.Engine.list(), using text-davinci-002"
-        )
-        model_id = "text-davinci-002"
+
+    """
+    engines has the following structure:
+    engines: {
+      "data": [
+        {
+          "created": null,
+          "id": "davinci-instruct-beta",
+          "object": "engine",
+          "owner": "openai",
+          "permissions": null,
+          "ready": true
+        },
+        ...
+        ]
+        // some stuff that doesn't matter
+    }
+    We access it via engines["data"][i]
+    """
+    engine_ids = [e["id"] for e in engines["data"]]
+
+    if provider_id == "openai" and model_id not in engine_ids:
+        print(f"{model_id} not found in openai.Engine.list(). Continue with text-davinci-002?")
+        if input("y/n: ") == "y":
+            model_id = "text-davinci-002"
+        else:
+            print("Exiting. Use -m to specify a valid model id")
+            sys.exit()
+
 
     if input_id.suffix == ".txt":
         with open(input_id, "r", encoding="utf-8", errors="ignore") as f:
