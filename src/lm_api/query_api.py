@@ -1,17 +1,22 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-    query_vs_dataframe.py - loads a CSV/xlsx/JSON file using Pandas, then sends an API query for each row in <key_column> in the file. Outputs the query and response to a text file.
+query_api.py - loads a CSV/xlsx/JSON file using Pandas, then sends an API query for each row in <key_column> in the file. Outputs the query and response to a text file.
 
-    python query_vs_dataframe.py -h for help
+Usage:
+    usage: lm-api/query_api.py [-h] [-i INPUT_FILE] [-o OUTPUT_DIR] [-provider PROVIDER_ID] [-k KEY] [-p PREFIX]
+                [-kc KEY_COLUMN] [-m MODEL_ID] [-n N_TOKENS] [-t TEMPERATURE] [-f2 FREQUENCY_PENALTY] [-s SUFFIX]
+                [-simple] [-p2 PRESENCE_PENALTY] [-v]
+
+    call with --help for more information
 """
 
 
 import argparse
 import logging
 import os
-import sys
 import random
+import sys
 import time
 from pathlib import Path
 
@@ -26,6 +31,7 @@ logging.basicConfig(
     format="%(asctime)s %(message)s",
     filename=f"api_dataframe_query.log",
 )
+
 logger = logging.getLogger(__name__)
 
 
@@ -53,8 +59,8 @@ def query_terms(
     :param float frequency_penalty: frequency penalty to use for the API query (default: 0.15)
     :param float presence_penalty: presence penalty to use for the API query (default: 0.05)
     :param float temperature: temperature to use for the API query (default: 0.7)
-    :param strorPath out_path: path to the output file (default: None)
-    :param strorPath source_path: path to the source file (default: None)
+    :param str or Path out_path: path to the output file (default: None)
+    :param str or Path source_path: path to the source file (default: None)
     :param bool verbose: verbose output (default: False)
     :return list: list of responses from the API
     """
@@ -138,7 +144,7 @@ def get_parser():
         required=False,
         default="Explain the following concept(s) to a Master's student in the field:",
         type=str,
-        help="prefix to add to each query (spaces added automatically)",
+        help="prefix to add to each query (spaces added automatically).\nDefaults to:\t'Explain the following concept(s) to a Master's student in the field:'",
     )
     parser.add_argument(
         "-s",
@@ -146,7 +152,7 @@ def get_parser():
         required=False,
         default="An acceptable solution to the problem would be similar to:",
         type=str,
-        help="suffix to add to each query (spaces added automatically)",
+        help="suffix to add to each query (spaces added automatically). \nDefaults to:\t'An acceptable solution to the problem would be similar to:'",
     )
     parser.add_argument(
         "-simple",
