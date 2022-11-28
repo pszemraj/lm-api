@@ -18,7 +18,7 @@ from pathlib import Path
 import openai
 from tqdm import tqdm
 
-from utils import append_entry_outtxt, df_to_list, flex_load_pandas
+from lm_api.utils import append_entry_outtxt, df_to_list, flex_load_pandas
 
 logging.basicConfig(
     level=logging.INFO,
@@ -260,13 +260,14 @@ if __name__ == "__main__":
     engine_ids = [e["id"] for e in engines["data"]]
 
     if provider_id == "openai" and model_id not in engine_ids:
-        print(f"{model_id} not found in openai.Engine.list(). Continue with text-davinci-002?")
+        print(
+            f"{model_id} not found in openai.Engine.list(). Continue with text-davinci-002?"
+        )
         if input("y/n: ") == "y":
             model_id = "text-davinci-002"
         else:
             print("Exiting. Use -m to specify a valid model id")
             sys.exit()
-
 
     if input_id.suffix == ".txt":
         with open(input_id, "r", encoding="utf-8", errors="ignore") as f:
