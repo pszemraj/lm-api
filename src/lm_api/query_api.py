@@ -31,46 +31,47 @@ logger = logging.getLogger(__name__)
 
 def query_terms(
     term_list,
-    prefix,
-    suffix,
+    prefix: str = "",
+    suffix: str = "",
+    model_id: str = "text-davinci-003",
+    n_tokens: int = 128,
+    frequency_penalty: float = 0.15,
+    presence_penalty: float = 0.05,
+    temperature: float = 0.7,
+    out_path: str or Path = None,
+    source_path: str or Path = None,
     verbose=False,
-    model_id="gpt-neo-20b",
-    n_tokens=128,
-    frequency_penalty=0.3,
-    presence_penalty=0.05,
-    temperature=1,
-    out_path=None,
-    source_path=None,
 ):
     """
-    query_terms - queries the API for each term in the term_list
+    query_terms - sends a query to the API for each term in the list
 
-    Args:
-        term_list (list): list of terms to query
-        prefix (str): prefix to add to each query
-        suffix (str): suffix to add to each query
-        verbose (bool, optional): _description_. Defaults to False.
-        model_id (str, optional): _description_. Defaults to "gpt-neo-20b".
-        n_tokens (int, optional): _description_. Defaults to 128.
-        frequency_penalty (float, optional): _description_. Defaults to 0.3.
-        presence_penalty (float, optional): _description_. Defaults to 0.05.
-        temperature (int, optional): _description_. Defaults to 1.
-        out_path (_type_, optional): _description_. Defaults to None.
+    :param term_list: list of terms to query
+    :param str prefix: prefix to add to each query
+    :param str suffix: suffix to add to each query
+    :param str model_id: model id to use for the API query (default: text-davinci-003)
+    :param int n_tokens: number of tokens to use for the API query (default: 128)
+    :param float frequency_penalty: frequency penalty to use for the API query (default: 0.15)
+    :param float presence_penalty: presence penalty to use for the API query (default: 0.05)
+    :param float temperature: temperature to use for the API query (default: 0.7)
+    :param strorPath out_path: path to the output file (default: None)
+    :param strorPath source_path: path to the source file (default: None)
+    :param bool verbose: verbose output (default: False)
+    :return list: list of responses from the API
     """
     if verbose:
         print(f"querying {len(term_list)} terms")
     for term in tqdm(term_list, desc="querying terms", total=len(term_list)):
 
         time.sleep(random.random() * 2)
-        _query = f"{prefix} {term} {suffix}"
-        _query_token_count = int(len(_query.split()) / 4)
+        query = f"{prefix} {term} {suffix}".strip()
+        _query_token_count = int(len(query.split()) / 4)  # approx 4 tokens per word
         if verbose:
-            print(f"querying {term}:\n\t{_query}")
+            print(f"querying {term}:\n\t{query}")
 
         # query the API
         completion = openai.Completion.create(
             engine=model_id,
-            prompt=_query,
+            prompt=query,
             max_tokens=_query_token_count + n_tokens,
             frequency_penalty=frequency_penalty,
             presence_penalty=presence_penalty,
@@ -78,11 +79,11 @@ def query_terms(
         )
 
         # remove the prefix and suffix from the query
-        _query = _query.replace(prefix, "").replace(suffix, "")
+        query = query.replace(prefix, "").replace(suffix, "")
 
         # append the response to the output text file
         out_file_path = append_entry_outtxt(
-            _query,
+            query,
             completion.choices[0].text,
             out_path=out_path,
             model_name=model_id,
