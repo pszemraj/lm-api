@@ -246,7 +246,8 @@ if __name__ == "__main__":
     verbose = args.verbose
 
     env_var = os.environ.get(provider_id.upper())
-    openai.api_key = env_var if key is None else str(key)
+    openai.api_key = env_var if key is None else key
+    assert openai.api_key is not None, "no API key found"
     openai.api_base = (
         "https://api.goose.ai/v1"
         if provider_id == "goose"
