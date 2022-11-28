@@ -136,15 +136,23 @@ def get_parser():
         required=False,
         default="Explain the following Natural Language Processing (NLP) concept(s):",
         type=str,
-        help="prefix to add to each query",
+        help="prefix to add to each query (spaces added automatically)",
     )
     parser.add_argument(
         "-s",
         "--suffix",
         required=False,
-        default=" An acceptable solution to the problem would be similar to:",
+        default="An acceptable solution to the problem would be similar to:",
         type=str,
-        help="suffix to add to each query",
+        help="suffix to add to each query (spaces added automatically)",
+    )
+    parser.add_argument(
+        "--simple",
+        "--no_prefix_suffix",
+        required=False,
+        default=False,
+        action="store_true",
+        help="do not add a prefix or suffix to the query",
     )
     parser.add_argument(
         "-kc",
@@ -221,6 +229,10 @@ if __name__ == "__main__":
     key_column = args.key_column
     prefix = args.prefix
     suffix = args.suffix
+    if args.no_prefix_suffix:
+        logger.info("no prefix or suffix added to queries")
+        prefix = ""
+        suffix = ""
     model_id = args.model_id
     key = args.key
     provider_id = args.provider_id
