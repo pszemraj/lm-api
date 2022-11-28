@@ -10,11 +10,9 @@
 [![Twitter](https://img.shields.io/twitter/url/http/shields.io.svg?style=social&label=Twitter)](https://twitter.com/lm-api)
 -->
 
-[![Project generated with PyScaffold](https://img.shields.io/badge/-PyScaffold-005CA0?logo=pyscaffold)](https://pyscaffold.org/)
-
 # lm-api
 
-> Utilities large language model API queries
+> Utilities for large language model API queries
 
 ## Usage
 
@@ -24,7 +22,7 @@ Command line scripts are located in `src/lm_api/`. For example, run
 python query_api.py -i <input_file> -m 'gpt-j-6b' -o <output_dir>
 ```
 
-This will query each row in the input file and output the results to the output directory using the gpt-j-6b model (on Goose API).
+This will query each row in the input file and output the results to the output directory using the `gpt-j-6b` model (on Goose API).
 
 **IMPORTANT:** your API key must be set in the environment variable `GOOSE` and `OPENAI` or passed as an argument to the script with the `-k` flag.
 
@@ -39,3 +37,5 @@ pip install -e .
 A quick test can be run with the `src/lm_api/test_goose_api.py` script.
 
 ---
+
+[![Project generated with PyScaffold](https://img.shields.io/badge/-PyScaffold-005CA0?logo=pyscaffold)](https://pyscaffold.org/)
