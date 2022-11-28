@@ -149,7 +149,7 @@ def get_parser():
         help="suffix to add to each query (spaces added automatically)",
     )
     parser.add_argument(
-        "--simple",
+        "-simple",
         "--no_prefix_suffix",
         required=False,
         default=False,
