@@ -12,19 +12,11 @@
 
 # lm-api
 
-> Utilities for large language model API queries
+> Command-line utilities for querying large language models
 
-## Usage
+This repo is built around making is easy to run a set of queries against a large language model (LM) and get back a set of results via CLI, but also has basic Python API functionality.
 
-Command line scripts are located in `src/lm_api/`. For example, run
-
-```
-python query_api.py -i <input_file> -m 'gpt-j-6b' -o <output_dir>
-```
-
-This will query each row in the input file and output the results to the output directory using the `gpt-j-6b` model (on Goose API).
-
-**IMPORTANT:** your API key must be set in the environment variable `GOOSE` and `OPENAI` or passed as an argument to the script with the `-k` flag.
+Queries are expected to be in a pandas-compatible format, and results are written to a text file with markdown formatting for easy viewing/sharing.
 
 ## Installation
 
@@ -34,7 +26,31 @@ After cloning, `cd` into the `lm-api` directory and run
 pip install -e .
 ```
 
+Alternatively, directly install via pip+git:
+
+```bash
+pip install git+https://github.com/pszemraj/lm-api.git
+```
+
 A quick test can be run with the `src/lm_api/test_goose_api.py` script.
+
+## Usage
+
+Command line scripts are located in `src/lm_api/`. And become installed as CLI commands. Currently, the commands are limited to `lm-api`. **IMPORTANT: your API key must be set in the environment variable `GOOSE` and `OPENAI` or passed as an argument to the script with the `-k` flag.**
+
+An example:
+
+```bash
+lm-api -i data/test_queries.xlsx -o ./my-test-folder
+```
+
+This will run the queries in `data/test_queries.xlsx` and write the results to a `.md` file in `my-test-folder/` in your current working directory. There are many options for the script, which can be viewed with the `-h` flag (e.g. `lm-api -h`).
+
+```bash
+usage: lm-api [-h] [-i INPUT_FILE] [-o OUTPUT_DIR] [-provider PROVIDER_ID] [-k KEY] [-p PREFIX] [-s SUFFIX] [-simple]
+              [-kc KEY_COLUMN] [-m MODEL_ID] [-n N_TOKENS] [-t TEMPERATURE] [-f2 FREQUENCY_PENALTY]
+              [-p2 PRESENCE_PENALTY] [-v]
+```
 
 ---
 

@@ -221,17 +221,17 @@ def get_parser():
     return parser
 
 
-if __name__ == "__main__":
+def main(args):
 
     PROVIDERS = ["goose", "openai"]
-    parser = get_parser()
-    args = parser.parse_args()
-    input_id = (
-        Path(args.input_file)
-        if args.input_file
-        else Path.cwd() / "data" / "test_queries.xlsx"
+
+    input_id = Path(args.input_file)
+    assert input_id.exists(), f"input file {str(input_id)} does not exist"
+    output_dir = (
+        input_id.parent / "lm-api-output"
+        if args.output_dir is None
+        else Path(args.output_dir)
     )
-    output_dir = Path(args.output_dir) or Path.cwd() / "out"
     output_dir.mkdir(exist_ok=True)
 
     key_column = args.key_column
@@ -285,7 +285,7 @@ if __name__ == "__main__":
         print(
             f"{model_id} not found in openai.Engine.list(). Continue with text-davinci-003?"
         )
-        if input("y/n: ") == "y":
+        if input("y/[n]: ") == "y":
             model_id = "text-davinci-003"
         else:
             print("Exiting. Use -m to specify a valid model id")
@@ -319,3 +319,16 @@ if __name__ == "__main__":
     )
 
     print(f"done, output file:\n\t{out_file_path}")
+
+
+def run():
+    """
+    run - run the main function
+    """
+    parser = get_parser()
+    args = parser.parse_args()
+    main(args)
+
+
+if __name__ == "__main__":
+    run()
