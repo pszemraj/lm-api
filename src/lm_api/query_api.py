@@ -97,7 +97,9 @@ def get_parser():
     """
     get_parser - a helper function for the argparse module
     """
-    parser = argparse.ArgumentParser(description="Split text by percent")
+    parser = argparse.ArgumentParser(
+        description="Query a list of terms from a pandas-compatible file to a language model API"
+    )
 
     parser.add_argument(
         "-i",
@@ -128,13 +130,13 @@ def get_parser():
         "--key",
         type=str,
         default=None,
-        help="API key for the provider if needed",
+        help="API key for the provider if needed (or set as environment variable OPENAI or GOOSE)",
     )
     parser.add_argument(
         "-p",
         "--prefix",
         required=False,
-        default="Explain the following Natural Language Processing (NLP) concept(s):",
+        default="Explain the following concept(s) to a Master's student in the field:",
         type=str,
         help="prefix to add to each query (spaces added automatically)",
     )
@@ -160,7 +162,7 @@ def get_parser():
         required=False,
         default="terms",
         type=str,
-        help="name of the column in the input file that contains the terms to query",
+        help="name of the column in the input file that contains the terms to query. Defaults to 'terms'",
     )
     parser.add_argument(
         "-m",
@@ -168,7 +170,7 @@ def get_parser():
         required=False,
         default="text-davinci-003",
         type=str,
-        help="model id to use for the API query. OpenAI models (text-davinci-003, ada, etc) Goose models (gpt-neo-20b, gpt-j-6b, etc)",
+        help="model id to use for the API query. OpenAI models (text-davinci-003, ada, etc) Goose models (gpt-neo-20b, gpt-j-6b, etc). Defaults to text-davinci-003",
     )
     parser.add_argument(
         "-n",
@@ -176,7 +178,7 @@ def get_parser():
         required=False,
         default=128,
         type=int,
-        help="number of tokens to use for the API query",
+        help="number of tokens to use for the API query (default: 128)",
     )
     parser.add_argument(
         "-t",
@@ -184,7 +186,7 @@ def get_parser():
         required=False,
         default=0.7,
         type=float,
-        help="temperature to use for the API query",
+        help="temperature to use for the API query (default: 0.7)",
     )
     parser.add_argument(
         "-f2",
@@ -192,7 +194,7 @@ def get_parser():
         required=False,
         default=0.15,
         type=float,
-        help="frequency penalty to use for the API query",
+        help="frequency penalty to use for the API query (default: 0.15)",
     )
     parser.add_argument(
         "-p2",
@@ -200,7 +202,7 @@ def get_parser():
         required=False,
         default=0.05,
         type=float,
-        help="presence penalty to use for the API query",
+        help="presence penalty to use for the API query (default: 0.05)",
     )
     parser.add_argument(
         "-v",
