@@ -120,8 +120,8 @@ def get_parser():
         "--provider-id",
         required=False,
         type=str,
-        default="goose",
-        help="provider to connect to for API. Defaults to goose (openai is other)",
+        default="openai",
+        help="provider to connect to for API. Defaults to openai (options: openai, goose)",
     )
     parser.add_argument(
         "-k",
@@ -166,9 +166,9 @@ def get_parser():
         "-m",
         "--model-id",
         required=False,
-        default="gpt-neo-20b",  # gpt-j-6b
+        default="text-davinci-003",
         type=str,
-        help="model id to use for the API query",
+        help="model id to use for the API query. OpenAI models (text-davinci-003, ada, etc) Goose models (gpt-neo-20b, gpt-j-6b, etc)",
     )
     parser.add_argument(
         "-n",
@@ -274,10 +274,10 @@ if __name__ == "__main__":
 
     if provider_id == "openai" and model_id not in engine_ids:
         print(
-            f"{model_id} not found in openai.Engine.list(). Continue with text-davinci-002?"
+            f"{model_id} not found in openai.Engine.list(). Continue with text-davinci-003?"
         )
         if input("y/n: ") == "y":
-            model_id = "text-davinci-002"
+            model_id = "text-davinci-003"
         else:
             print("Exiting. Use -m to specify a valid model id")
             sys.exit()
