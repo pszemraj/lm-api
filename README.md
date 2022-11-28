@@ -14,14 +14,22 @@
 
 # lm-api
 
-> Add a short description here!
+> Utilities large language model API queries
 
-A longer description of your project goes here...
+## Usage
 
+Command line scripts are located in `src/lm_api/`. For example, run
 
-<!-- pyscaffold-notes -->
+```
+python query_api.py -i <input_file> -m 'gpt-j-6b' -o <output_dir>
+```
 
-## Note
+This will query each row in the input file and output the results to the output directory using the gpt-j-6b model (on Goose API).
 
-This project has been set up using PyScaffold 4.3.1. For details and usage
-information on PyScaffold see https://pyscaffold.org/.
+**IMPORTANT:** your API key must be set in the environment variable `GOOSE` and `OPENAI` or passed as an argument to the script with the `-k` flag.
+
+## Installation
+
+A quick test can be run with the `test_goose_api.py` script.
+
+---
