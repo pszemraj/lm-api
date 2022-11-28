@@ -30,6 +30,12 @@ This will query each row in the input file and output the results to the output 
 
 ## Installation
 
-A quick test can be run with the `test_goose_api.py` script.
+After cloning, `cd` into the `lm-api` directory and run
+
+```bash
+pip install -e .
+```
+
+A quick test can be run with the `src/lm_api/test_goose_api.py` script.
 
 ---
