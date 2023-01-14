@@ -34,6 +34,11 @@ logging.basicConfig(
 
 logger = logging.getLogger(__name__)
 
+def log(msg, verbose):
+    logger.info(msg)
+    if verbose:
+        print(msg)
+
 
 def query_terms(
     term_list,
@@ -64,15 +69,16 @@ def query_terms(
     :param bool verbose: verbose output (default: False)
     :return list: list of responses from the API
     """
-    if verbose:
-        print(f"querying {len(term_list)} terms")
+    log(f"querying {len(term_list)} terms", verbose)
+    log(f"prefix: {prefix}", False)
+    log(f"suffix: {suffix}", False)
+
     for term in tqdm(term_list, desc="querying terms", total=len(term_list)):
 
         time.sleep(random.random() * 2)
         query = f"{prefix} {term} {suffix}".strip()
         _query_token_count = int(len(query.split()) / 4)  # approx 4 tokens per word
-        if verbose:
-            print(f"querying {term}:\n\t{query}")
+        log(f"querying {term}:\n\t{query}", verbose)
 
         # query the API
         completion = openai.Completion.create(
