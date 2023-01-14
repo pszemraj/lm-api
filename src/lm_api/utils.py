@@ -117,10 +117,9 @@ def check_if_link(text: str, verbose=False):
         if verbose:
             print(f"{text} is a link")
         return True
-    else:
-        if verbose:
-            print(f"{text} is not a link")
-        return False
+    if verbose:
+        print(f"{text} is not a link")
+    return False
 
 
 def flex_load_pandas(path_or_url, verbose=False):

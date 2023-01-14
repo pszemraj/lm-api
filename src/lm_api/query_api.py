@@ -29,7 +29,7 @@ logging.basicConfig(
     level=logging.INFO,
     filemode="w",
     format="%(asctime)s %(message)s",
-    filename=f"api_dataframe_query.log",
+    filename="api_dataframe_query.log",
 )
 
 logger = logging.getLogger(__name__)
@@ -228,7 +228,7 @@ def get_parser():
 
 
 def main(args):
-
+    """main function"""
     PROVIDERS = ["goose", "openai"]
 
     input_id = Path(args.input_file)
@@ -267,24 +267,6 @@ def main(args):
     )
     engines = openai.Engine.list()
 
-    """
-    engines has the following structure:
-    engines: {
-      "data": [
-        {
-          "created": null,
-          "id": "davinci-instruct-beta",
-          "object": "engine",
-          "owner": "openai",
-          "permissions": null,
-          "ready": true
-        },
-        ...
-        ]
-        // some stuff that doesn't matter
-    }
-    We access it via engines["data"][i]
-    """
     engine_ids = [e["id"] for e in engines["data"]]
 
     if provider_id == "openai" and model_id not in engine_ids:
