@@ -34,7 +34,14 @@ logging.basicConfig(
 
 logger = logging.getLogger(__name__)
 
-def log(msg, verbose):
+
+def log(msg: str, verbose=False):
+    """
+    log - log a message to the console and to the log file
+
+    :param str msg: message to log
+    :param bool verbose: verbose output (default: False)
+    """
     logger.info(msg)
     if verbose:
         print(msg)
