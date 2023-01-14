@@ -23,16 +23,27 @@ Queries are expected to be in a pandas-compatible format, and results are writte
 After cloning, `cd` into the `lm-api` directory and run
 
 ```bash
+# create a virtual environment (optional)
 pip install -e .
 ```
 
 Alternatively, directly install via pip+git:
 
 ```bash
+# create a virtual environment (optional)
 pip install git+https://github.com/pszemraj/lm-api.git
 ```
 
 A quick test can be run with the `src/lm_api/test_goose_api.py` script.
+
+## On API Keys
+
+You will need an API key for each provider you want to query. Currently, the following providers are supported:
+
+- [Goose](https://goose.ai/)
+- [OpenAI](https://beta.openai.com/playground)
+
+API keys can be set in the environment variables `GOOSE` and `OPENAI` or passed as an argument to the script with the `-k` flag.
 
 ## Usage
 
@@ -53,6 +64,8 @@ usage: lm-api [-h] [-i INPUT_FILE] [-o OUTPUT_DIR] [-provider PROVIDER_ID] [-k K
 ```
 
 ## TODO / Roadmap
+
+_Note: this is a work in progress, and the following is a running list of things that need to be done. This may and likely will be updated._
 
 - [ ] adjust the `--prefix` and `--suffix` flags to a "prompt engine" switch that can augment/update the prompt with a variety of options (e.g. `--prompt-engine=prefix` or `--prompt-engine=prefix+suffix`)
 - [ ] create simple CLI that does not require a query file
