@@ -1,24 +1,29 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-    query_vs_dataframe.py - loads a CSV/xlsx/JSON file using Pandas, then sends an API query for each row in <key_column> in the file. Outputs the query and response to a text file.
+query_api.py - loads a CSV/xlsx/JSON file using Pandas, then sends an API query for each row in <key_column> in the file. Outputs the query and response to a text file.
 
-    python query_vs_dataframe.py -h for help
+Usage:
+    usage: lm-api/query_api.py [-h] [-i INPUT_FILE] [-o OUTPUT_DIR] [-provider PROVIDER_ID] [-k KEY] [-p PREFIX]
+                [-kc KEY_COLUMN] [-m MODEL_ID] [-n N_TOKENS] [-t TEMPERATURE] [-f2 FREQUENCY_PENALTY] [-s SUFFIX]
+                [-simple] [-p2 PRESENCE_PENALTY] [-v]
+
+    call with --help for more information
 """
 
 
 import argparse
 import logging
 import os
-import sys
 import random
+import sys
 import time
 from pathlib import Path
 
 import openai
 from tqdm import tqdm
 
-from utils import append_entry_outtxt, df_to_list, flex_load_pandas
+from lm_api.utils import append_entry_outtxt, df_to_list, flex_load_pandas
 
 logging.basicConfig(
     level=logging.INFO,
@@ -26,51 +31,53 @@ logging.basicConfig(
     format="%(asctime)s %(message)s",
     filename=f"api_dataframe_query.log",
 )
+
 logger = logging.getLogger(__name__)
 
 
 def query_terms(
     term_list,
-    prefix,
-    suffix,
+    prefix: str = "",
+    suffix: str = "",
+    model_id: str = "text-davinci-003",
+    n_tokens: int = 128,
+    frequency_penalty: float = 0.15,
+    presence_penalty: float = 0.05,
+    temperature: float = 0.7,
+    out_path: str or Path = None,
+    source_path: str or Path = None,
     verbose=False,
-    model_id="gpt-neo-20b",
-    n_tokens=128,
-    frequency_penalty=0.3,
-    presence_penalty=0.05,
-    temperature=1,
-    out_path=None,
-    source_path=None,
 ):
     """
-    query_terms - queries the API for each term in the term_list
+    query_terms - sends a query to the API for each term in the list
 
-    Args:
-        term_list (list): list of terms to query
-        prefix (str): prefix to add to each query
-        suffix (str): suffix to add to each query
-        verbose (bool, optional): _description_. Defaults to False.
-        model_id (str, optional): _description_. Defaults to "gpt-neo-20b".
-        n_tokens (int, optional): _description_. Defaults to 128.
-        frequency_penalty (float, optional): _description_. Defaults to 0.3.
-        presence_penalty (float, optional): _description_. Defaults to 0.05.
-        temperature (int, optional): _description_. Defaults to 1.
-        out_path (_type_, optional): _description_. Defaults to None.
+    :param term_list: list of terms to query
+    :param str prefix: prefix to add to each query
+    :param str suffix: suffix to add to each query
+    :param str model_id: model id to use for the API query (default: text-davinci-003)
+    :param int n_tokens: number of tokens to use for the API query (default: 128)
+    :param float frequency_penalty: frequency penalty to use for the API query (default: 0.15)
+    :param float presence_penalty: presence penalty to use for the API query (default: 0.05)
+    :param float temperature: temperature to use for the API query (default: 0.7)
+    :param str or Path out_path: path to the output file (default: None)
+    :param str or Path source_path: path to the source file (default: None)
+    :param bool verbose: verbose output (default: False)
+    :return list: list of responses from the API
     """
     if verbose:
         print(f"querying {len(term_list)} terms")
     for term in tqdm(term_list, desc="querying terms", total=len(term_list)):
 
         time.sleep(random.random() * 2)
-        _query = f"{prefix} {term} {suffix}"
-        _query_token_count = int(len(_query.split()) / 4)
+        query = f"{prefix} {term} {suffix}".strip()
+        _query_token_count = int(len(query.split()) / 4)  # approx 4 tokens per word
         if verbose:
-            print(f"querying {term}:\n\t{_query}")
+            print(f"querying {term}:\n\t{query}")
 
         # query the API
         completion = openai.Completion.create(
             engine=model_id,
-            prompt=_query,
+            prompt=query,
             max_tokens=_query_token_count + n_tokens,
             frequency_penalty=frequency_penalty,
             presence_penalty=presence_penalty,
@@ -78,11 +85,11 @@ def query_terms(
         )
 
         # remove the prefix and suffix from the query
-        _query = _query.replace(prefix, "").replace(suffix, "")
+        query = query.replace(prefix, "").replace(suffix, "")
 
         # append the response to the output text file
         out_file_path = append_entry_outtxt(
-            _query,
+            query,
             completion.choices[0].text,
             out_path=out_path,
             model_name=model_id,
@@ -96,7 +103,9 @@ def get_parser():
     """
     get_parser - a helper function for the argparse module
     """
-    parser = argparse.ArgumentParser(description="Split text by percent")
+    parser = argparse.ArgumentParser(
+        description="Query a list of terms from a pandas-compatible file to a language model API"
+    )
 
     parser.add_argument(
         "-i",
@@ -119,31 +128,39 @@ def get_parser():
         "--provider-id",
         required=False,
         type=str,
-        default="goose",
-        help="provider to connect to for API. Defaults to goose (openai is other)",
+        default="openai",
+        help="provider to connect to for API. Defaults to openai (options: openai, goose)",
     )
     parser.add_argument(
         "-k",
         "--key",
         type=str,
         default=None,
-        help="API key for the provider if needed",
+        help="API key for the provider if needed (or set as environment variable OPENAI or GOOSE)",
     )
     parser.add_argument(
         "-p",
         "--prefix",
         required=False,
-        default="Explain the following Natural Language Processing (NLP) concept(s):",
+        default="Explain the following concept(s) to a Master's student in the field:",
         type=str,
-        help="prefix to add to each query",
+        help="prefix to add to each query (spaces added automatically).\nDefaults to:\t'Explain the following concept(s) to a Master's student in the field:'",
     )
     parser.add_argument(
         "-s",
         "--suffix",
         required=False,
-        default=" An acceptable solution to the problem would be similar to:",
+        default="An acceptable solution to the problem would be similar to:",
         type=str,
-        help="suffix to add to each query",
+        help="suffix to add to each query (spaces added automatically). \nDefaults to:\t'An acceptable solution to the problem would be similar to:'",
+    )
+    parser.add_argument(
+        "-simple",
+        "--no_prefix_suffix",
+        required=False,
+        default=False,
+        action="store_true",
+        help="do not add a prefix or suffix to the query",
     )
     parser.add_argument(
         "-kc",
@@ -151,15 +168,15 @@ def get_parser():
         required=False,
         default="terms",
         type=str,
-        help="name of the column in the input file that contains the terms to query",
+        help="name of the column in the input file that contains the terms to query. Defaults to 'terms'",
     )
     parser.add_argument(
         "-m",
         "--model-id",
         required=False,
-        default="gpt-neo-20b",  # gpt-j-6b
+        default="text-davinci-003",
         type=str,
-        help="model id to use for the API query",
+        help="model id to use for the API query. OpenAI models (text-davinci-003, ada, etc) Goose models (gpt-neo-20b, gpt-j-6b, etc). Defaults to text-davinci-003",
     )
     parser.add_argument(
         "-n",
@@ -167,7 +184,7 @@ def get_parser():
         required=False,
         default=128,
         type=int,
-        help="number of tokens to use for the API query",
+        help="number of tokens to use for the API query (default: 128)",
     )
     parser.add_argument(
         "-t",
@@ -175,7 +192,7 @@ def get_parser():
         required=False,
         default=0.7,
         type=float,
-        help="temperature to use for the API query",
+        help="temperature to use for the API query (default: 0.7)",
     )
     parser.add_argument(
         "-f2",
@@ -183,7 +200,7 @@ def get_parser():
         required=False,
         default=0.15,
         type=float,
-        help="frequency penalty to use for the API query",
+        help="frequency penalty to use for the API query (default: 0.15)",
     )
     parser.add_argument(
         "-p2",
@@ -191,7 +208,7 @@ def get_parser():
         required=False,
         default=0.05,
         type=float,
-        help="presence penalty to use for the API query",
+        help="presence penalty to use for the API query (default: 0.05)",
     )
     parser.add_argument(
         "-v",
@@ -204,22 +221,26 @@ def get_parser():
     return parser
 
 
-if __name__ == "__main__":
+def main(args):
 
     PROVIDERS = ["goose", "openai"]
-    parser = get_parser()
-    args = parser.parse_args()
-    input_id = (
-        Path(args.input_file)
-        if args.input_file
-        else Path.cwd() / "data" / "test_queries.xlsx"
+
+    input_id = Path(args.input_file)
+    assert input_id.exists(), f"input file {str(input_id)} does not exist"
+    output_dir = (
+        input_id.parent / "lm-api-output"
+        if args.output_dir is None
+        else Path(args.output_dir)
     )
-    output_dir = Path(args.output_dir) or Path.cwd() / "out"
     output_dir.mkdir(exist_ok=True)
 
     key_column = args.key_column
     prefix = args.prefix
     suffix = args.suffix
+    if args.no_prefix_suffix:
+        logger.info("no prefix or suffix added to queries")
+        prefix = ""
+        suffix = ""
     model_id = args.model_id
     key = args.key
     provider_id = args.provider_id
@@ -231,7 +252,8 @@ if __name__ == "__main__":
     verbose = args.verbose
 
     env_var = os.environ.get(provider_id.upper())
-    openai.api_key = env_var if key is None else str(key)
+    openai.api_key = env_var if key is None else key
+    assert openai.api_key is not None, "no API key found"
     openai.api_base = (
         "https://api.goose.ai/v1"
         if provider_id == "goose"
@@ -260,13 +282,14 @@ if __name__ == "__main__":
     engine_ids = [e["id"] for e in engines["data"]]
 
     if provider_id == "openai" and model_id not in engine_ids:
-        print(f"{model_id} not found in openai.Engine.list(). Continue with text-davinci-002?")
-        if input("y/n: ") == "y":
-            model_id = "text-davinci-002"
+        print(
+            f"{model_id} not found in openai.Engine.list(). Continue with text-davinci-003?"
+        )
+        if input("y/[n]: ") == "y":
+            model_id = "text-davinci-003"
         else:
             print("Exiting. Use -m to specify a valid model id")
             sys.exit()
-
 
     if input_id.suffix == ".txt":
         with open(input_id, "r", encoding="utf-8", errors="ignore") as f:
@@ -296,3 +319,16 @@ if __name__ == "__main__":
     )
 
     print(f"done, output file:\n\t{out_file_path}")
+
+
+def run():
+    """
+    run - run the main function
+    """
+    parser = get_parser()
+    args = parser.parse_args()
+    main(args)
+
+
+if __name__ == "__main__":
+    run()

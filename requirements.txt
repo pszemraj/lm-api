@@ -1,4 +1,0 @@
-openai
-pandas
-openpyxl
-tqdm
