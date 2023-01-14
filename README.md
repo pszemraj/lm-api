@@ -14,7 +14,7 @@
 
 > Command-line utilities for querying large language models
 
-This repo is built around making is easy to run a set of queries against a large language model (LM) and get back a set of results via CLI, but also has basic Python API functionality.
+This repo is built around making it easy to run a set of queries against a large language model (LM) and get back a set of results via CLI, but it also has basic Python API functionality.
 
 Queries are expected to be in a pandas-compatible format, and results are written to a text file with markdown formatting for easy viewing/sharing.
 
@@ -55,7 +55,7 @@ An example:
 lm-api -i data/test_queries.xlsx -o ./my-test-folder
 ```
 
-This will run the queries in `data/test_queries.xlsx` and write the results to a `.md` file in `my-test-folder/` in your current working directory. There are many options for the script, which can be viewed with the `-h` flag (e.g. `lm-api -h`).
+This will run the queries in `data/test_queries.xlsx` and write the results to a `.md` file in `my-test-folder/` in your current working directory. There are many options for the script, which can be viewed with the `-h` flag (e.g., `lm-api -h`).
 
 ```bash
 usage: lm-api [-h] [-i INPUT_FILE] [-o OUTPUT_DIR] [-provider PROVIDER_ID] [-k KEY] [-p PREFIX] [-s SUFFIX] [-simple]
@@ -67,9 +67,10 @@ usage: lm-api [-h] [-i INPUT_FILE] [-o OUTPUT_DIR] [-provider PROVIDER_ID] [-k K
 
 _Note: this is a work in progress, and the following is a running list of things that need to be done. This may and likely will be updated._
 
-- [ ] adjust the `--prefix` and `--suffix` flags to a "prompt engine" switch that can augment/update the prompt with a variety of options (e.g. `--prompt-engine=prefix` or `--prompt-engine=prefix+suffix`)
-- [ ] create simple CLI that does not require a query file
-- [ ] validate performance as package / adjust as needed (i.e. import `lm_api` should work)
+- [ ] adjust the `--prefix` and `--suffix` flags to a "prompt engine" switch that can augment/update the prompt with a variety of options (e.g., `--prompt-engine=prefix` or `--prompt-engine=prefix+suffix`)
+- [ ] add a simple CLI command that does not require a query file
+- [ ] add support for other providers (e.g., textsynth)
+- [ ] validate performance as package / adjust as needed (i.e., import `lm_api` should work and have full functionality w.r.t. CLI)
 - [ ] setup tests
 
 ---
