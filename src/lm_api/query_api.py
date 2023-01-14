@@ -218,6 +218,12 @@ def get_parser():
         action="store_true",
         help="verbose output",
     )
+
+    # if there are no args, print the help
+    if len(sys.argv) == 1:
+        parser.print_help(sys.stderr)
+        sys.exit(1)
+
     return parser
 
 
