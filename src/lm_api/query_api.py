@@ -76,9 +76,9 @@ def query_terms(
     :param bool verbose: verbose output (default: False)
     :return list: list of responses from the API
     """
-    log(f"querying {len(term_list)} terms", verbose)
-    log(f"prefix: {prefix}", False)
-    log(f"suffix: {suffix}", False)
+    log(f"\nquerying {len(term_list)} terms", verbose=verbose)
+    log(f"prefix: {prefix}", verbose=False)
+    log(f"suffix: {suffix}", verbose=False)
 
     for term in tqdm(term_list, desc="querying terms", total=len(term_list)):
 
