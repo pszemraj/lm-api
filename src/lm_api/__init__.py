@@ -1,3 +1,9 @@
+"""
+lm_api - a Python package for querying the Language Models API from various providers.
+
+    key functions:
+        query_terms - query the API
+"""
 import sys
 
 from . import query_api
