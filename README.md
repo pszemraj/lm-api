@@ -52,6 +52,13 @@ usage: lm-api [-h] [-i INPUT_FILE] [-o OUTPUT_DIR] [-provider PROVIDER_ID] [-k K
               [-p2 PRESENCE_PENALTY] [-v]
 ```
 
+## TODO / Roadmap
+
+- [ ] adjust the `--prefix` and `--suffix` flags to a "prompt engine" switch that can augment/update the prompt with a variety of options (e.g. `--prompt-engine=prefix` or `--prompt-engine=prefix+suffix`)
+- [ ] create simple CLI that does not require a query file
+- [ ] validate performance as package / adjust as needed (i.e. import `lm_api` should work)
+- [ ] setup tests
+
 ---
 
 [![Project generated with PyScaffold](https://img.shields.io/badge/-PyScaffold-005CA0?logo=pyscaffold)](https://pyscaffold.org/)
