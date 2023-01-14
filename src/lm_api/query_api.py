@@ -35,6 +35,18 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 
+def log(msg: str, verbose=False):
+    """
+    log - log a message to the console and to the log file
+
+    :param str msg: message to log
+    :param bool verbose: verbose output (default: False)
+    """
+    logger.info(msg)
+    if verbose:
+        print(msg)
+
+
 def query_terms(
     term_list,
     prefix: str = "",
@@ -64,15 +76,16 @@ def query_terms(
     :param bool verbose: verbose output (default: False)
     :return list: list of responses from the API
     """
-    if verbose:
-        print(f"querying {len(term_list)} terms")
+    log(f"\nquerying {len(term_list)} terms", verbose=verbose)
+    log(f"prefix: {prefix}", verbose=False)
+    log(f"suffix: {suffix}", verbose=False)
+
     for term in tqdm(term_list, desc="querying terms", total=len(term_list)):
 
         time.sleep(random.random() * 2)
         query = f"{prefix} {term} {suffix}".strip()
         _query_token_count = int(len(query.split()) / 4)  # approx 4 tokens per word
-        if verbose:
-            print(f"querying {term}:\n\t{query}")
+        log(f"querying {term}:\n\t{query}", verbose)
 
         # query the API
         completion = openai.Completion.create(
@@ -230,7 +243,7 @@ def get_parser():
 def main(args):
 
     PROVIDERS = ["goose", "openai"]
-
+    log(f"args:\n\t{args}", verbose=False)
     input_id = Path(args.input_file)
     assert input_id.exists(), f"input file {str(input_id)} does not exist"
     output_dir = (
@@ -323,8 +336,8 @@ def main(args):
         out_path=output_dir,
         source_path=input_id,
     )
-
-    print(f"done, output file:\n\t{out_file_path}")
+    print("Done")
+    log(f"output file:\n\t{out_file_path.resolve()}", verbose=verbose)
 
 
 def run():
