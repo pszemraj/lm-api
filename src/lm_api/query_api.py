@@ -243,7 +243,7 @@ def get_parser():
 def main(args):
 
     PROVIDERS = ["goose", "openai"]
-
+    log(f"args:\n\t{args}", verbose=False)
     input_id = Path(args.input_file)
     assert input_id.exists(), f"input file {str(input_id)} does not exist"
     output_dir = (
@@ -336,8 +336,8 @@ def main(args):
         out_path=output_dir,
         source_path=input_id,
     )
-
-    print(f"done, output file:\n\t{out_file_path}")
+    print("Done")
+    log(f"output file:\n\t{out_file_path.resolve()}", verbose=verbose)
 
 
 def run():
