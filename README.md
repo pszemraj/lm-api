@@ -19,7 +19,7 @@ This repo is built around making it easy to run a set of queries via CLI on a la
 Typical workflow:
 
 1. Create `CSV`/`.xlsx`/etc. file with model queries as rows
-2. Run `lm-api` with `-i /path/to/my/queries.csv`, use `-kc` to specify the column name with the queries
+2. Run `lm-api` with `-i /path/to/my/queries.csv`, and use `-kc` to specify the column name with the queries
 3. Get completions compiled into a single markdown file!
 
 Queries are expected to be in a pandas-compatible format, and results are written to a text file with markdown formatting for easy viewing/sharing.
@@ -93,7 +93,7 @@ usage: lm-api [-h] [-i INPUT_FILE] [-o OUTPUT_DIR] [-provider PROVIDER_ID] [-k K
 
 ### Input File Format
 
-The input file should be a pandas-compatible format (e.g., `.csv`, `.xlsx`, etc.). The default column name for the queries is `query`, but this can be changed with the `-kc` flag.
+The input file should be in a pandas-compatible format (e.g., `.csv`, `.xlsx`, etc.). The default column name for the queries is `query`, which can be changed with the `-kc` flag.
 
 An example input file is provided in `data/test_queries.xlsx`.
 
